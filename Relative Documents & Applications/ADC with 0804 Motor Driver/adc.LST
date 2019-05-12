@@ -1,0 +1,74 @@
+C51 COMPILER V9.00   ADC                                                                   07/24/2017 10:20:13 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE ADC
+OBJECT MODULE PLACED IN adc.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE adc.c BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include <REG51.H>
+   2          #include "lcd.c"
+   3          #define adc_port P0              //ADC Port
+   4          sbit rd = P3^4;                  //Read signal P1.0
+   5          sbit wr = P3^3;                  //Write signal P1.1
+   6          sbit intr = P3^2;                //INTR signal P1.3
+   7          sbit led = P3^0;
+   8          unsigned char adc_val;
+   9          
+  10          void conv();                     //Start of conversion function
+  11          void read();                     //Read ADC function
+  12          
+  13          
+  14          
+  15          void main()
+  16          {
+  17   1          delay_ms(100);
+  18   1          intr = 1;
+  19   1          lcd_init();
+  20   1          lcd_out(1,1,"ADC with 8051");
+  21   1          lcd_out(2,1,"Voltage: ");
+  22   1          
+  23   1          
+  24   1          while(1)
+  25   1          {                           //Forever loop
+  26   2            conv();                  //Start conversion
+  27   2            read();                  //Read ADC       
+  28   2            lcd_print(2,11,adc_val,4);
+  29   2            delay_ms(100);
+  30   2          }
+  31   1      }
+  32          
+  33          void conv()
+  34          {
+  35   1             
+  36   1              wr = 0;                      //Make WR low
+  37   1              wr = 1;                      //Make WR high
+  38   1      
+  39   1              while(intr == 1);                 //Wait for INTR to go low
+  40   1      }
+  41          void read()     // function to read the Analog to digital converted value
+  42          {
+  43   1      
+  44   1              rd = 1;                      //Make RD low
+  45   1              rd = 0;
+  46   1              adc_val = P1;          //Read ADC port
+  47   1              delay_ms(250);
+  48   1              rd = 1;                      //Make RD high
+  49   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    752    ----
+   CONSTANT SIZE    =     24    ----
+   XDATA SIZE       =   ----    ----
+C51 COMPILER V9.00   ADC                                                                   07/24/2017 10:20:13 PAGE 2   
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1      11
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
